@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { GridList, GridListTile } from '@material-ui/core';
 
 import crash from '../../images/crash.png';
@@ -42,11 +42,53 @@ export const GridComponent: React.FC<any> = () => {
     { id: 17, image: fallout }
   ];
 
-  const items = [...characters, ...characters];
+  let items = [...characters, ...characters];
+
+  function shuffle(array: any) {
+    var m = array.length, t, i;
+    while (m) {
+      i = Math.floor(Math.random() * m--);
+      t = array[m];
+      array[m] = array[i];
+      array[i] = t;
+    }
+  
+    return array;
+  }
+
+  useEffect(() => {
+    items = shuffle(items);
+  });
 
   const imageStyle = {
     objectFit: 'contain' as 'contain',
     height: '100%'
+  };
+
+  const selectedTile = {
+    border: '2px solid red'
+  };
+
+  const isSelected = (gridRef: number) => {
+    debugger;
+    return selection.length <= 2 && selection.some(x => x.gridRef === gridRef);
+  };
+
+  const defaultSelection: any[] = [];
+  const [selection, setSelection] = useState(defaultSelection);
+
+  const tileClicked = (item: any, gridRef: number) => {
+    setSelection([...selection, { ...item, gridRef }]);
+    setTimeout(() => {
+      if (selection.length === 2) {
+        if ((selection[0].id > -1 && selection[1].id > -1) && selection[0].id === selection[1].id) {
+          window.alert('found match!');
+        }
+  
+        setSelection([]);
+      }
+    }, 100);
+    
   };
 
   return (
@@ -57,7 +99,10 @@ export const GridComponent: React.FC<any> = () => {
         {
           items.map(
             (item: any, i: number) => 
-              <GridListTile key={item.id}>
+              <GridListTile
+                key={i}
+                onClick={() => {tileClicked(item, i)}}
+                style={isSelected(i) ? selectedTile : {} }>
                 <img src={item.image} alt="image" style={imageStyle}  />
               </GridListTile>
           )
