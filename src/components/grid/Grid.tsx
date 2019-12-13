@@ -1,39 +1,32 @@
 import React, { useState } from 'react';
 import { GridList, GridListTile } from '@material-ui/core';
+import { styles } from './Styles';
 
 export const GridComponent: React.FC<any> = (props) => {
 
-  const { items } = props;
+  const { characters } = props;
+  const items = mapCharactersToGridItems();
+  const [itemState, setItemState] = useState([...items]);
 
-  const imageStyle = {
-    objectFit: 'contain' as 'contain',
-    height: '100%'
-  };
+  function mapCharactersToGridItems() {
+    return characters.map((x: any, i: number) => {
+      return { id: x.id, image: x.image, selected: false, gridRef: i }
+    });
+  }
 
-  const selectedTile = {
-    border: '2px solid red'
-  };
-
-  const isSelected = (gridRef: number) => {
-    return selection.length <= 2 && selection.some(x => x.gridRef === gridRef);
-  };
-
-  const defaultSelection: any[] = [];
-  const [selection, setSelection] = useState(defaultSelection);
-
-  const tileClicked = (item: any, gridRef: number) => {
-    setSelection([...selection, { ...item, gridRef }]);
-    setTimeout(() => {
-      if (selection.length === 2) {
-        if ((selection[0].id > -1 && selection[1].id > -1) &&
-             selection[0].id === selection[1].id) {
-          window.alert('found match!');
-        }
-  
-        setSelection([]);
+  const tileClicked = (item: any) => {
+    const newState = itemState.map((x: any) => x.gridRef === item.gridRef ? { ...x, selected: !x.selected } : x);
+    setItemState(newState);
+    const selected = newState.filter((x: any) => x.selected);
+    if (selected.length === 2) {
+      if (selected[0].id === selected[1].id) {
+        window.alert('match!');
       }
-    }, 100);
-    
+
+      setTimeout(() => {
+        setItemState([...items]);
+      }, 3000);
+    }
   };
 
   return (
@@ -42,13 +35,13 @@ export const GridComponent: React.FC<any> = (props) => {
         cellHeight={160}
         cols={6}>
         {
-          items.map(
+          itemState.map(
             (item: any, i: number) => 
               <GridListTile
                 key={i}
-                onClick={() => {tileClicked(item, i)}}
-                style={isSelected(i) ? selectedTile : {} }>
-                <img src={item.image} alt="image" style={imageStyle}  />
+                onClick={() => {tileClicked(item)}}
+                style={item.selected ? styles.selectedTile : {}}>
+                <img src={item.image} alt="game character" style={styles.imageStyle}  />
               </GridListTile>
           )
         }

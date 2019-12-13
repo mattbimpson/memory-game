@@ -7,7 +7,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Grid items={ImagesService.getCharacters()}/>
+      <Grid characters={ImagesService.getCharacters()}/>
     </div>
   );
 }
