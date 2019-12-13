@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { GridList, GridListTile } from '@material-ui/core';
 
 export const GridComponent: React.FC<any> = (props) => {
-  const { items } = props; 
+
+  const { items } = props;
 
   const imageStyle = {
     objectFit: 'contain' as 'contain',
@@ -24,7 +25,8 @@ export const GridComponent: React.FC<any> = (props) => {
     setSelection([...selection, { ...item, gridRef }]);
     setTimeout(() => {
       if (selection.length === 2) {
-        if ((selection[0].id > -1 && selection[1].id > -1) && selection[0].id === selection[1].id) {
+        if ((selection[0].id > -1 && selection[1].id > -1) &&
+             selection[0].id === selection[1].id) {
           window.alert('found match!');
         }
   
