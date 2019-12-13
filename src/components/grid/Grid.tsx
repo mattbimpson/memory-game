@@ -15,7 +15,12 @@ export const GridComponent: React.FC<any> = (props) => {
   }
 
   const tileClicked = (item: any) => {
-    const newState = itemState.map((x: any) => x.gridRef === item.gridRef ? { ...x, selected: !x.selected } : x);
+    // Don't allow more clicks if 2 cards already selected
+    const currentSelected = itemState.filter((x: any) => x.selected);
+    if (currentSelected.length === 2) return;
+
+    // Update the state to include the newly selected card
+    const newState = itemState.map((x: any) => (x.gridRef === item.gridRef) ? { ...x, selected: true } : x);
     setItemState(newState);
     const selected = newState.filter((x: any) => x.selected);
     if (selected.length === 2) {
@@ -23,15 +28,17 @@ export const GridComponent: React.FC<any> = (props) => {
         window.alert('match!');
       }
 
+      // Reset the state
       setTimeout(() => {
         setItemState([...items]);
-      }, 3000);
+      }, 2000);
     }
   };
 
   return (
     <>
       <GridList
+        style={{ backgroundColor: 'gray' }}
         cellHeight={160}
         cols={6}>
         {
@@ -40,8 +47,9 @@ export const GridComponent: React.FC<any> = (props) => {
               <GridListTile
                 key={i}
                 onClick={() => {tileClicked(item)}}
-                style={item.selected ? styles.selectedTile : {}}>
-                <img src={item.image} alt="game character" style={styles.imageStyle}  />
+                style={item.selected ? styles.selectedTile : styles.tile}>
+                <img src={item.image} alt="game character"
+                  style={item.selected ? styles.imageStyle : styles.hidden} />
               </GridListTile>
           )
         }

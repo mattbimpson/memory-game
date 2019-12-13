@@ -6,5 +6,11 @@ export const styles = {
   selectedTile: {
     //display: 'contents',
     border: '2px solid red'
+  },
+  tile: {
+    border: '2px solid blue'
+  },
+  hidden: {
+    display: 'none'
   }
 };
