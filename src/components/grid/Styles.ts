@@ -5,10 +5,10 @@ export const styles = {
   },
   selectedTile: {
     //display: 'contents',
-    border: '2px solid red'
+    border: '1px solid red'
   },
   tile: {
-    border: '2px solid blue'
+    border: '1px solid blue'
   },
   hidden: {
     display: 'none'
