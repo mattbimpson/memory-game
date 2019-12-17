@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { GridList, GridListTile } from '@material-ui/core';
 import { styles } from './Styles';
+import { ImagesService } from '../../services/ImagesService';
 
 export const GridComponent: React.FC<any> = (props) => {
 
-  const { characters } = props;
-  const items = mapCharactersToGridItems();
+  const { characters, onFinish } = props;
+  const items = mapCharactersToGridItems(characters);
   const [itemState, setItemState] = useState([...items]);
   const initialMatches: any = [];
   const [matches, setMatches] = useState(initialMatches);
 
-  function mapCharactersToGridItems() {
+  function mapCharactersToGridItems(characters: any) {
     return characters.map((x: any, i: number) => {
       return { id: x.id, image: x.image, selected: false, gridRef: i }
     });
@@ -38,6 +39,9 @@ export const GridComponent: React.FC<any> = (props) => {
     if (selected.length === 2) {
       if (selected[0].id === selected[1].id) {
         setMatches([...matches, item.id]);
+        if (isGameFinished()) {
+          return;
+        }
       }
 
       // Reset the state
@@ -46,6 +50,35 @@ export const GridComponent: React.FC<any> = (props) => {
       }, 2000);
     }
   };
+
+  function isGameFinished() {
+    if (matches.length === 16) {
+      setTimeout(() => {
+        setTimeout(() => {
+          const characters = ImagesService.getCharacters();
+          setItemState(mapCharactersToGridItems(characters));
+        }, 500);
+        setTimeout(() => {
+          const characters = ImagesService.getCharacters();
+          setItemState(mapCharactersToGridItems(characters));
+        }, 1000);
+        setTimeout(() => {
+          const characters = ImagesService.getCharacters();
+          setItemState(mapCharactersToGridItems(characters));
+        }, 1500);
+        setTimeout(() => {
+          const characters = ImagesService.getCharacters();
+          setItemState(mapCharactersToGridItems(characters));
+        }, 2000);
+        setTimeout(() => {
+          setMatches([]);
+          onFinish();
+        }, 2500);
+      }, 2000);
+      
+      return true;
+    }
+  }
 
   return (
     <>
