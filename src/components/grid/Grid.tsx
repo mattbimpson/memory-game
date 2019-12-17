@@ -11,6 +11,9 @@ export const GridComponent: React.FC<any> = (props) => {
   const initialMatches: any = [];
   const [matches, setMatches] = useState(initialMatches);
 
+  const height = window.innerHeight;
+  const cellHeight = (height / 6) - 5;
+
   function mapCharactersToGridItems(characters: any) {
     return characters.map((x: any, i: number) => {
       return { id: x.id, image: x.image, selected: false, gridRef: i }
@@ -85,23 +88,25 @@ export const GridComponent: React.FC<any> = (props) => {
 
   return (
     <>
-      <GridList
-        style={{ backgroundColor: 'gray' }}
-        cellHeight={160}
-        cols={6}>
-        {
-          itemState.map(
-            (item: any, i: number) => 
-              <GridListTile
-                key={i}
-                onClick={() => {tileClicked(item)}}
-                style={cardVisible(item) ? styles.selectedTile : styles.tile}>
-                <img src={item.image} alt="game character"
-                  style={cardVisible(item) ? styles.imageStyle : styles.hidden} />
-              </GridListTile>
-          )
-        }
-      </GridList>
+      <div style={styles.container(height)}>
+        <GridList
+          style={styles.grid}
+          cellHeight={cellHeight}
+          cols={6}>
+          {
+            itemState.map(
+              (item: any, i: number) => 
+                <GridListTile
+                  key={i}
+                  onClick={() => {tileClicked(item)}}
+                  style={cardVisible(item) ? styles.selectedTile : styles.tile}>
+                  <img src={item.image} alt="game character"
+                    style={cardVisible(item) ? styles.imageStyle : styles.hidden} />
+                </GridListTile>
+            )
+          }
+        </GridList>
+      </div>
     </>
   )
 };

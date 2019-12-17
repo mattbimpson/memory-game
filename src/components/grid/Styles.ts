@@ -1,4 +1,14 @@
 export const styles = {
+  container(height: number) {
+    return {
+      height: `${height}px`,
+      overflow: 'hidden'
+    }
+  },
+  grid: {
+    height: '100%',
+    backgroundColor: 'gray'
+  },
   imageStyle: {
     objectFit: 'contain' as 'contain',
     height: '100%'
