@@ -30,6 +30,9 @@ export const GridComponent: React.FC<any> = (props) => {
   const tileClicked = (item: any) => {
     // Don't allow more clicks if 2 cards already selected
     const currentSelected = itemState.filter((x: any) => x.selected);
+    for (const selection of currentSelected) {
+      if (selection.gridRef === item.gridRef) return;
+    }
     if (currentSelected.length === 2) return;
 
     // Update the state to include the newly selected card
