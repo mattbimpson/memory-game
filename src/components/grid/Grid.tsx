@@ -7,11 +7,23 @@ export const GridComponent: React.FC<any> = (props) => {
   const { characters } = props;
   const items = mapCharactersToGridItems();
   const [itemState, setItemState] = useState([...items]);
+  const initialMatches: any = [];
+  const [matches, setMatches] = useState(initialMatches);
 
   function mapCharactersToGridItems() {
     return characters.map((x: any, i: number) => {
       return { id: x.id, image: x.image, selected: false, gridRef: i }
     });
+  }
+
+  function cardVisible(item: any) {
+    let show = item.selected;
+    for (const x of matches) {
+      if (x === item.id) {
+        show = true;
+      }
+    }
+    return show;
   }
 
   const tileClicked = (item: any) => {
@@ -25,7 +37,7 @@ export const GridComponent: React.FC<any> = (props) => {
     const selected = newState.filter((x: any) => x.selected);
     if (selected.length === 2) {
       if (selected[0].id === selected[1].id) {
-        window.alert('match!');
+        setMatches([...matches, item.id]);
       }
 
       // Reset the state
@@ -47,9 +59,9 @@ export const GridComponent: React.FC<any> = (props) => {
               <GridListTile
                 key={i}
                 onClick={() => {tileClicked(item)}}
-                style={item.selected ? styles.selectedTile : styles.tile}>
+                style={cardVisible(item) ? styles.selectedTile : styles.tile}>
                 <img src={item.image} alt="game character"
-                  style={item.selected ? styles.imageStyle : styles.hidden} />
+                  style={cardVisible(item) ? styles.imageStyle : styles.hidden} />
               </GridListTile>
           )
         }
